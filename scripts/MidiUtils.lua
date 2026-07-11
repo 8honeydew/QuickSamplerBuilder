@@ -19,7 +19,3 @@ function NoteToMidi(note)
 
     return (octave + 1) * 12 + NOTE_OFFSETS[note_name]
 end
-
-reaper.ShowConsoleMsg("C4 -> " .. NoteToMidi("C4") .. "\n")
-reaper.ShowConsoleMsg("A4 -> " .. NoteToMidi("A4") .. "\n")
-reaper.ShowConsoleMsg("F#3 -> " .. NoteToMidi("F#3") .. "\n")
