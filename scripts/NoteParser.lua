@@ -1,4 +1,9 @@
-function ExtractNote(filename)
-    return filename:match("^(.-)%.")
-end
+-- Extracts a note name from a WAV filename.
+-- Example:
+-- "C#4.wav" -> "C#4"
 
+function extractNote(filename)
+
+    return filename:match("^([A-G]#?%d+)%.wav$")
+
+end

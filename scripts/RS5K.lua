@@ -1,27 +1,109 @@
-function LoadSampleIntoRS5K(sample_path)
-    
-    reaper.InsertTrackAtIndex(0, true)
+-- Creates the instrument track if it does not already exist.
+function getOrCreateInstrumentTrack()
 
     local track = reaper.GetTrack(0, 0)
 
-    reaper.GetSetMediaTrackInfo_String(track, "P_NAME", "Piano", true)
+    if track then
+        return track
+    end
 
-    local fx_index = reaper.TrackFX_AddByName(track, "ReaSamplOmatic5000", false, 1)
+
+    reaper.InsertTrackAtIndex(0, true)
+
+    track = reaper.GetTrack(0, 0)
+
+    reaper.GetSetMediaTrackInfo_String(
+        track,
+        "P_NAME",
+        "Quick Sampler Instrument",
+        true
+    )
+
+    return track
+
+end
+
+
+-- Creates an RS5K instance, loads a sample, and maps it to a MIDI note.
+function loadSampleIntoRS5K(samplePath, midiNote)
+    
+    local track = getOrCreateInstrumentTrack()
+
+
+    local fxIndex = reaper.TrackFX_AddByName(
+        track, 
+        "ReaSamplOmatic5000", 
+        false, 
+        1
+    )
+
 
     local success = reaper.TrackFX_SetNamedConfigParm(
         track,
-        fx_index,
+        fxIndex,
         "FILE0",
-        sample_path
+        samplePath
     )
+
 
     reaper.TrackFX_SetNamedConfigParm(
         track,
-        fx_index,
+        fxIndex,
         "DONE",
         ""
     )
 
+
+    local normalizedNote = midiNote / 127
+
+
+    -- Set note range.
+
+    reaper.TrackFX_SetParamNormalized(
+        track,
+        fxIndex,
+        3,
+        normalizedNote
+    )
+
+
+    reaper.TrackFX_SetParamNormalized(
+        track,
+        fxIndex,
+        4,
+        normalizedNote
+    )
+
+
+    -- Allow all MIDI channels.
+
+    reaper.TrackFX_SetParamNormalized(
+        track,
+        fxIndex,
+        7,
+        0
+)
+
+    -- Allow full velocity range.
+
+    reaper.TrackFX_SetParamNormalized(
+        track,
+        fxIndex,
+        17,
+        0
+    )
+
+    
+    reaper.TrackFX_SetParamNormalized(
+        track,
+        fxIndex,
+        18,
+        1
+    )
+
     reaper.TrackList_AdjustWindows(false)
     reaper.UpdateArrange()
+
+    return track, fxIndex
+
 end

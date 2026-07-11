@@ -1,4 +1,7 @@
-local NOTE_OFFSETS = {
+-- Semitone offsets from C.
+
+local noteOffsets = {
+
     C = 0,
     ["C#"] = 1,
     D = 2,
@@ -11,11 +14,24 @@ local NOTE_OFFSETS = {
     A = 9,
     ["A#"] = 10,
     B = 11
+
 }
 
-function NoteToMidi(note)
-    local note_name, octave = note:match("^([A-G]#?)(%-?%d+)$")
+
+-- Converts a note name into a MIDI note number.
+-- Example:
+-- C1 -> 24
+
+function noteToMidi(note)
+
+    local noteName, octave = note:match("^([A-G]#?)(%-?%d+)$")
+    
+    if not noteName or not octave then
+        return nil
+    end
+
     octave = tonumber(octave)
 
-    return (octave + 1) * 12 + NOTE_OFFSETS[note_name]
+    return (octave + 1) * 12 + noteOffsets[noteName]
+
 end
