@@ -65,7 +65,7 @@ end
 -- Build the sampler instrument.
 reaper.Undo_BeginBlock()
 reaper.PreventUIRefresh(1)
- 
+
 local track, proceed = RS5K.prepareInstrumentTrack()
 
 if not proceed then
@@ -84,7 +84,7 @@ local fxFailures = {}
 -- so the user can catch mistakes before building; a future version
 -- could offer Replace/Layer/Cancel per duplicate instead.
 for _, mapping in ipairs(mappings) do
-    local fullPath = folder .. "\\" .. mapping.file
+    local fullPath = FileUtils.joinPath(folder, mapping.file)
 
     if RS5K.loadSampleIntoRS5K(track, fullPath, mapping.midi) then
         loadedCount = loadedCount + 1

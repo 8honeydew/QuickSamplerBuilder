@@ -7,6 +7,13 @@ function FileUtils.getFolder(path)
 end
 
 
+-- Joins a folder path and filename using the current OS's separator.
+function FileUtils.joinPath(folder, file)
+    local separator = package.config:sub(1, 1)
+    return folder .. separator .. file
+end
+
+
 -- Returns all WAV filenames inside a folder, sorted alphabetically.
 -- Uses Reaper's own file enumeration, so this works on any OS Reaper runs on.
 function FileUtils.getWavFiles(folder)
