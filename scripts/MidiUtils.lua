@@ -19,6 +19,7 @@ local noteOffsets = {
 
 
 -- Converts a note name into a MIDI note number.
+-- Returns nil if the note name is invalid or falls outside 0-127.
 -- Example: "C1" -> 24
 function MidiUtils.noteToMidi(note)
     local noteName, octave = note:match("^([A-G]#?)(%-?%d+)$")
@@ -28,7 +29,13 @@ function MidiUtils.noteToMidi(note)
     end
 
     octave = tonumber(octave)
-    return (octave + 1) * 12 + noteOffsets[noteName]
+    local midiNote = (octave + 1) * 12 + noteOffsets[noteName]
+
+    if midiNote < 0 or midiNote > 127 then
+        return nil
+    end
+ 
+    return midiNote
 end
 
 
